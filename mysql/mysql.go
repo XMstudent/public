@@ -6,36 +6,32 @@ import (
 	"github.com/go-xorm/xorm"
 )
 
-var MysqlService = new(MysqlPool)
+var Service = new(Pool)
 
-type MysqlPool struct {
-	DBMysql *xorm.Engine
+type Pool struct {
+	DB *xorm.Engine
 }
 
-func (M *MysqlPool) InitMysqlPool(config map[string]map[string]string) (err error) {
-	host := "tcp(" + config["mysql"]["host"] + ":" + config["mysql"]["port"] + ")"
-	database := config["mysql"]["database"]
-	user := config["mysql"]["username"]
-	password := config["mysql"]["password"]
-	charset := "utf8"
-	maxOpenConns := 5
-	maxIdleConns := 2
-	dataSourceName := user + ":" + password + "@" + host + "/" + database + "?charset=" + charset
-	M.DBMysql, err = xorm.NewEngine("mysql", dataSourceName)
-	fmt.Println("初始化mysql引擎")
+func (M *Pool) InitMysqlPool(config *ConfigMysql) (err error) {
+	host := fmt.Sprintf("tcp(",config.Host,":",config.Port,")")
+	maxOpenConns := config.MaxOpenConns
+	maxIdleConns := config.MaxIdleConns
+	dataSourceName:=fmt.Sprintf(config.Username,":",config.Password,"@",host,"/",config.Database,"?charset=",config.Charset)
+	//dataSourceName := user + ":" + password + "@" + host + "/" + database + "?charset=" + charset
+	M.DB, err = xorm.NewEngine("mysql", dataSourceName)
 	if err != nil {
 		return err
 	}
-	M.DBMysql.SetMaxOpenConns(maxOpenConns)
-	M.DBMysql.SetMaxIdleConns(maxIdleConns)
+	M.DB.SetMaxOpenConns(maxOpenConns)
+	M.DB.SetMaxIdleConns(maxIdleConns)
 
-	err = M.DBMysql.Ping()
+	err = M.DB.Ping()
 	if err != nil {
 		return err
 	}
 	return
 }
 
-func (M *MysqlPool) GetClient() *xorm.Engine {
-	return M.DBMysql
+func (M *Pool) GetClient() *xorm.Engine {
+	return M.DB
 }

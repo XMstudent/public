@@ -1,3 +1,4 @@
+mysql need package:
 - package: github.com/go-sql-driver/mysql
   version: ^1.4.1
 - package: github.com/go-xorm/xorm
@@ -7,3 +8,5 @@
   vcs: git
   subpackages:
   - cloudsql
+redis need package:
+- package: github.com/gomodule/redigo/redis
