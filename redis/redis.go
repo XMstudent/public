@@ -16,7 +16,8 @@ func (rp *Pool)InitRedisPool (config *ConfigRedis)(err error){
 		MaxIdle:   config.MaxIdle, /*最大的空闲连接数*/
 		MaxActive: config.MaxActive, /*最大的激活连接数*/
 		Dial: func() (c redis.Conn, err error) {
-			c, err = redis.Dial("tcp", fmt.Sprintf(config.Host,":",config.Port), redis.DialPassword(config.Password))
+
+			c, err = redis.Dial("tcp", fmt.Sprintf("%s:%s",config.Host,config.Port), redis.DialPassword(config.Password))
 			if err != nil {
 				fmt.Println("Redis错误："+err.Error())
 				return nil, err

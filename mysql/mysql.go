@@ -13,11 +13,10 @@ type Pool struct {
 }
 
 func (M *Pool) InitMysqlPool(config *ConfigMysql) (err error) {
-	host := fmt.Sprintf("tcp(",config.Host,":",config.Port,")")
+	host := fmt.Sprintf("tpc(%s:%s)",config.Host,config.Port)
 	maxOpenConns := config.MaxOpenConns
 	maxIdleConns := config.MaxIdleConns
-	dataSourceName:=fmt.Sprintf(config.Username,":",config.Password,"@",host,"/",config.Database,"?charset=",config.Charset)
-	//dataSourceName := user + ":" + password + "@" + host + "/" + database + "?charset=" + charset
+	dataSourceName :=fmt.Sprintf("%s:%s@%s/%s?charset=%s",config.Username,config.Password,host,config.Database,config.Charset)
 	M.DB, err = xorm.NewEngine("mysql", dataSourceName)
 	if err != nil {
 		return err
