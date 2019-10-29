@@ -12,18 +12,18 @@ type Pool struct {
 	DB *xorm.Engine
 }
 
-func (M *Pool) InitMysqlPool(config *ConfigMysql) (err error) {
-	host := fmt.Sprintf("tcp(%s:%s)",config.Host,config.Port)
-	maxOpenConns := config.MaxOpenConns
-	maxIdleConns := config.MaxIdleConns
-	dataSourceName :=fmt.Sprintf("%s:%s@%s/%s?charset=%s",config.Username,config.Password,host,config.Database,config.Charset)
+func (M *Pool) InitMysqlPool(config Config) (err error) {
+	mysqlConfig:=config.GetMysqlConfig()
+	host := fmt.Sprintf("tcp(%s:%s)",mysqlConfig.Host,mysqlConfig.Port)
+	maxOpenConns := mysqlConfig.MaxOpenConns
+	maxIdleConns := mysqlConfig.MaxIdleConns
+	dataSourceName :=fmt.Sprintf("%s:%s@%s/%s?charset=%s",mysqlConfig.Username,mysqlConfig.Password,host,mysqlConfig.Database,mysqlConfig.Charset)
 	M.DB, err = xorm.NewEngine("mysql", dataSourceName)
 	if err != nil {
 		return err
 	}
 	M.DB.SetMaxOpenConns(maxOpenConns)
 	M.DB.SetMaxIdleConns(maxIdleConns)
-
 	err = M.DB.Ping()
 	if err != nil {
 		return err

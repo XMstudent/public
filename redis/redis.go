@@ -12,14 +12,14 @@ type Pool struct {
 	DB *redis.Pool
 }
 
-func (rp *Pool) InitRedisPool(config *ConfigRedis) (err error) {
-
+func (rp *Pool) InitRedisPool(config Config) (err error) {
+	redisConfig:=config.GetRedisConfig()
 	rp.DB = &redis.Pool{
-		MaxIdle:   config.MaxIdle,
-		MaxActive: config.MaxActive,
+		MaxIdle:   redisConfig.MaxIdle,
+		MaxActive: redisConfig.MaxActive,
 		Dial: func() (c redis.Conn, err error) {
 
-			c, err = redis.Dial("tcp", fmt.Sprintf("%s:%s", config.Host, config.Port), redis.DialPassword(config.Password))
+			c, err = redis.Dial("tcp", fmt.Sprintf("%s:%s", redisConfig.Host, redisConfig.Port), redis.DialPassword(redisConfig.Password))
 			if err != nil {
 				return nil, errors.New(fmt.Sprintf("%s:%s", "redis connection error:", err.Error()))
 			}
