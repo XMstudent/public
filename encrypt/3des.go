@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"crypto/des"
 	"encoding/base64"
-	errors "smart4s.com/public/perror"
+	errors "github.com/XMstudent/public/perror"
 )
 
 // [golang ECB 3DES Encrypt]

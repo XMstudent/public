@@ -8,7 +8,7 @@ import (
 	"crypto/x509"
 	"encoding/base64"
 	"encoding/pem"
-	errors "smart4s.com/public/perror"
+	errors "github.com/XMstudent/public/perror"
 )
 
 // encrypt rsa-sha1 with pkcs8 private key
